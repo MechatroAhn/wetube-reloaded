@@ -9,7 +9,7 @@
   "scripts": {
     "dev": "nodemon --exec babel-node src/init.js"
   },
-  "author": "MechtoAhn",
+  "author": "MechatroAhn",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/MechatroAhn/wetube-reloaded/issues"
