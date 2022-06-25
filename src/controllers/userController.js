@@ -138,8 +138,6 @@ export const finishGithubLogin = async(req, res) => {
     }
 };
 
-export const edit =(req, res) =>res.send("Edit User");
-
 
 
 export const logout = (req, res) => {
@@ -147,7 +145,7 @@ export const logout = (req, res) => {
     return res.redirect("/");
 };
 
-export const see = (req, res) => res.send("See User");
+
 
 export const startKakaoLogin = (req, res) => {
     const REST_API_KEY = process.env.KA_KEY;
@@ -228,3 +226,95 @@ export const finishKakaoLogin = async(req, res) => {
      
 };
         
+
+export const getEdit = (req, res) => {
+    return res.render("edit-profile",{pageTitle:"Edit Profile"});
+};
+
+
+
+export const postEdit = async(req, res) => {
+    const {
+        session: {
+            user: { _id },
+        },
+        body: { name, email, username, location },
+    } = req;
+
+    // const { id } = req.session.user._id ; 동일
+
+    const emailExists = await User.exists({email});
+    const usernameExists = await User.exists({username});
+
+    if(emailExists || usernameExists){
+        if(email===req.session.user.email && usernameExists===null){
+            const updatedUser = await User.findByIdAndUpdate(_id, {
+                name,
+                email,
+                username,
+                location,
+                },
+                {new: true}
+            );
+            req.session.user = updatedUser;
+            return res.redirect("/users/edit");
+        } else if(email===req.session.user.email && username===req.session.user.username){
+            const updatedUser = await User.findByIdAndUpdate(_id, {
+                name,
+                email,
+                username,
+                location,
+                },
+                {new: true}
+            );
+            req.session.user = updatedUser;
+            return res.redirect("/users/edit");
+        } else if(username === req.session.user.username && emailExists===null){
+            const updatedUser = await User.findByIdAndUpdate(_id, {
+                name,
+                email,
+                username,
+                location,
+                },
+                {new: true}
+            );
+            req.session.user = updatedUser;
+            return res.redirect("/users/edit");
+        } else{
+            return res.render("edit-profile", {pageTitle:"Edit Profile"});
+        }
+    } else{
+        const updatedUser = await User.findByIdAndUpdate(_id, {
+            name,
+            email,
+            username,
+            location,
+            },
+            {new: true}
+        );
+        req.session.user = updatedUser;
+        return res.redirect("/users/edit");
+    }
+
+    // 위에 else 안에있는 방법과 동일
+    // await User.findByIdAndUpdate(_id, {
+    //     name,
+    //     email,
+    //     username,
+    //     location,
+    // });
+
+    // req.session.user = {
+    //     ...req.session.user,
+    //     name,
+    //     email,
+    //     username,
+    //     location,
+    // };
+    
+
+
+
+};
+
+export const see = (req, res) => res.send("See User");
