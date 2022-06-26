@@ -130,6 +130,7 @@ export const finishGithubLogin = async(req, res) => {
                 location:userData.location,
             });
         }
+        req.session.socialOnly = true;
         req.session.loggedIn = true;
         req.session.user = user;
         return res.redirect("/");
@@ -217,7 +218,7 @@ export const finishKakaoLogin = async(req, res) => {
                 username: userInfo.properties.nickname,
             });
         }
-
+        req.session.socialOnly = true;
         req.session.loggedIn = true;
         req.session.user = user;
         return res.redirect("/");
@@ -236,11 +237,11 @@ export const getEdit = (req, res) => {
 export const postEdit = async(req, res) => {
     const {
         session: {
-            user: { _id },
+            user: { _id, avatarUrl },
         },
         body: { name, email, username, location },
+        file,
     } = req;
-
     // const { id } = req.session.user._id ; 동일
 
     const emailExists = await User.exists({email});
@@ -249,6 +250,7 @@ export const postEdit = async(req, res) => {
     if(emailExists || usernameExists){
         if(email===req.session.user.email && usernameExists===null){
             const updatedUser = await User.findByIdAndUpdate(_id, {
+                avatarUrl: file ? file.path : avatarUrl,
                 name,
                 email,
                 username,
@@ -260,6 +262,7 @@ export const postEdit = async(req, res) => {
             return res.redirect("/users/edit");
         } else if(email===req.session.user.email && username===req.session.user.username){
             const updatedUser = await User.findByIdAndUpdate(_id, {
+                avatarUrl: file ? file.path : avatarUrl,
                 name,
                 email,
                 username,
@@ -271,6 +274,7 @@ export const postEdit = async(req, res) => {
             return res.redirect("/users/edit");
         } else if(username === req.session.user.username && emailExists===null){
             const updatedUser = await User.findByIdAndUpdate(_id, {
+                avatarUrl: file ? file.path : avatarUrl,
                 name,
                 email,
                 username,
@@ -285,6 +289,7 @@ export const postEdit = async(req, res) => {
         }
     } else{
         const updatedUser = await User.findByIdAndUpdate(_id, {
+            avatarUrl: file ? file.path : avatarUrl,
             name,
             email,
             username,
@@ -314,6 +319,49 @@ export const postEdit = async(req, res) => {
     
 
 
+
+};
+
+
+
+export const getChangePassword = (req, res) =>{
+
+    if(req.session.user.socialOnly === true){
+        return res.redirect("/");
+    }
+
+    return res.render("users/change-password",{pageTitle:"Change Password"});
+
+
+};
+
+export const postChangePassword = async(req, res) =>{
+    const {
+        session: {
+            user: { _id, password },
+        },
+        body: { oldPassword, newPassword, newPasswordConfirmation },
+    } = req;
+    const ok = await bcrypt.compare(oldPassword, password);
+    if(!ok){
+        return res.status(400).render("users/change-password",{
+            pageTitle:"Change Password",
+            errorMessage:"The current password is incorrect.",
+        });
+    } 
+    if(newPassword !== newPasswordConfirmation){
+        return res.status(400).render("users/change-password",{
+            pageTitle:"Change Password",
+            errorMessage:"The password does not match the confirmation.",
+        });
+    }
+
+    const user = await User.findById(_id);
+    user.password= newPassword;
+    await user.save();  // save and hash
+    req.session.user.password = user.password;
+    await req.session.destroy();
+    return res.redirect("/login");
 
 };
 

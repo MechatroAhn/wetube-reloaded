@@ -1,9 +1,20 @@
 extends base
 
 block content
-    form(method="POST")
+    if loggedInUser.avatarUrl
+        img(src=`${loggedInUser.socialOnly ? "" : "/"}` + loggedInUser.avatarUrl, width="100", height="100")
+    form(method="POST", enctype="multipart/form-data")
+        label(for="avatar") Avatar
+        input(name="avatar", id="avatar", type="file", accept="image/*")
         input(name="name",value=loggedInUser.name, type="text", required, placeholder="Name")
-        input(name="email", value=loggedInUser.email,type="email", required, placeholder="Email")
+        if loggedInUser.socialOnly
+            input(disabled, name="email", value=loggedInUser.email,type="email", required, placeholder="Email")
+        else
+            input(name="email", value=loggedInUser.email,type="email", required, placeholder="Email")
         input(name="username", value=loggedInUser.username,type="text", required, placeholder="Username")
         input(name="location", value=loggedInUser.location, type="text", required, placeholder="Location")
         input(type="submit", value="Update Profile")
+
+        if !loggedInUser.socialOnly
+            hr
+            a(href="change-password") Change Password &rarr;
