@@ -36,3 +36,4 @@ export const videoUpload = multer({
     fileSize: 10000000,
     },
 });
+

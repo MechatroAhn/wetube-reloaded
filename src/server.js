@@ -10,27 +10,31 @@ import { localsMiddleware } from "./middlewares";
 import req from "express/lib/request";
 import res from "express/lib/response";
 
-
-
 const app = express();
 const logger = morgan("dev");
 
 app.set("view engine", "pug");
 app.set("views", process.cwd() + "/src/views");
 app.use(logger);
-app.use(express.urlencoded({extended: true}));
+app.use(express.urlencoded({ extended: true }));
 
 app.use(
-    session({
+  session({
     secret: process.env.COOKIE_SECRET,
-    resave:false,
+    resave: false,
     saveUninitialized: false,
     // cookie:{
     //     maxAge:200000,
     // },
-    store: MongoStore.create({mongoUrl: process.env.DB_URL}),
-    })
+    store: MongoStore.create({ mongoUrl: process.env.DB_URL }),
+  })
 );
+
+app.use((req, res, next) => {
+  res.header("Cross-Origin-Embedder-Policy", "require-corp");
+  res.header("Cross-Origin-Opener-Policy", "same-origin");
+  next();
+});
 
 app.use(localsMiddleware);
 app.use("/uploads", express.static("uploads"));
@@ -41,5 +45,3 @@ app.use("/users", userRouter);
 app.use("/api", apiRouter);
 
 export default app;
-
-
