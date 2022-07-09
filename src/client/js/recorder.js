@@ -1,5 +1,4 @@
 import { createFFmpeg, fetchFile } from "@ffmpeg/ffmpeg";
-
 const actionBtn = document.getElementById("actionBtn");
 const video = document.getElementById("preview");
 
@@ -23,17 +22,18 @@ const downloadFile = (fileUrl, fileName) => {
 
 const handleDownload = async () => {
   actionBtn.removeEventListener("click", handleDownload);
+
   actionBtn.innerText = "Transcoding...";
+
   actionBtn.disabled = true;
 
-  const ffmpeg = createFFmpeg({
-    log: true,
-    corePath: "https://unpkg.com/@ffmpeg/core@0.8.5/dist/ffmpeg-core.js",
-  });
+  const ffmpeg = createFFmpeg({ log: true });
   await ffmpeg.load();
 
   ffmpeg.FS("writeFile", files.input, await fetchFile(videoFile));
+
   await ffmpeg.run("-i", files.input, "-r", "60", files.output);
+
   await ffmpeg.run(
     "-i",
     files.input,
@@ -53,12 +53,13 @@ const handleDownload = async () => {
   const mp4Url = URL.createObjectURL(mp4Blob);
   const thumbUrl = URL.createObjectURL(thumbBlob);
 
-  downloadFile(thumbUrl, `${thumbUrl}.jpg`);
-  downloadFile(mp4Url, `${mp4Url}.mp4`);
+  downloadFile(mp4Url, "MyRecording.mp4");
+  downloadFile(thumbUrl, "MyThumbnail.jpg");
 
+  ffmpeg.FS("unlink", files.input);
   ffmpeg.FS("unlink", files.output);
   ffmpeg.FS("unlink", files.thumb);
-  ffmpeg.FS("unlink", files.input);
+
   URL.revokeObjectURL(mp4Url);
   URL.revokeObjectURL(thumbUrl);
   URL.revokeObjectURL(videoFile);
@@ -68,34 +69,34 @@ const handleDownload = async () => {
   actionBtn.addEventListener("click", handleStart);
 };
 
-const handleStop = () => {
-  actionBtn.innerText = "Download Recording";
-  actionBtn.removeEventListener("click", handleStop);
-  actionBtn.addEventListener("click", handleDownload);
-  recorder.stop();
-};
-
 const handleStart = () => {
-  actionBtn.innerText = "Stop Recording";
+  actionBtn.innerText = "Recording";
+  actionBtn.disabled = true;
   actionBtn.removeEventListener("click", handleStart);
-  actionBtn.addEventListener("click", handleStop);
-  recorder = new window.MediaRecorder(stream);
-
+  recorder = new MediaRecorder(stream, { mimeType: "video/webm" });
   recorder.ondataavailable = (event) => {
     videoFile = URL.createObjectURL(event.data);
     video.srcObject = null;
     video.src = videoFile;
     video.loop = true;
     video.play();
+    actionBtn.innerText = "Download";
+    actionBtn.disabled = false;
+    actionBtn.addEventListener("click", handleDownload);
   };
-
   recorder.start();
+  setTimeout(() => {
+    recorder.stop();
+  }, 5000);
 };
 
 const init = async () => {
   stream = await navigator.mediaDevices.getUserMedia({
     audio: false,
-    video: true,
+    video: {
+      width: 1024,
+      height: 576,
+    },
   });
   video.srcObject = stream;
   video.play();

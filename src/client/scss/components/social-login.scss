@@ -3,10 +3,12 @@
     padding-top: 40px;
     margin-top: 30px;
     .social__btn--github{
-        background-color: #24883b;
-        margin-bottom: 10px;
+        background-color: #24883b !important;
+        color:white !important;
+        margin-bottom: 10px !important;
     }
     .social__btn--kakao{
-        background-color: #fae100;
+        background-color: #fae100 !important;
+        color:white !important;
     }
 }

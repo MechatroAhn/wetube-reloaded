@@ -28,7 +28,7 @@ const handlePlayClick = (event) => {
 
 const handleKeydown = (event) => {
   const { keyCode } = event; // space > keycode 32
-  if (String(keyCode) === String(32)) {
+  if (String(keyCode) === String(32) && event.target === document.body) {
     if (video.paused) {
       video.play();
     } else {
