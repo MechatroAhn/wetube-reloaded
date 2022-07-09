@@ -9,9 +9,7 @@ module.exports = {
     videoPlayer: BASE_JS + "videoPlayer.js",
     recorder: BASE_JS + "recorder.js",
     commentSection: BASE_JS + "commentSection.js",
-  },
-  mode: "development",
-  watch: true,
+  },  // mode를 설정했던곳, package.json에서 설정으로 변경 , watch:true도 제거하고 json으로 옮김 -w
   plugins: [
     new MiniCssExtractPlugin({
       filename: "css/styles.css",
