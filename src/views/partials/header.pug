@@ -16,12 +16,12 @@ header
                     a(href="/users/logout") Logout   
                 li
                     a(href=`/users/${loggedInUser._id}`)
-                        if loggedInUser.avatarUrl ===""
+                        if loggedInUser.avatarUrl === ""
                             span 😎
                         else if loggedInUser.avatarUrl.includes("github")
-                            img.header__avatar(src="/" + loggedInUser.avatarUrl, crossorigin)
+                            img.header__avatar(src=loggedInUser.avatarUrl, crossorigin)
                         else if loggedInUser.avatarUrl.includes("kakao")
-                            img.header__avatar(src="/" + loggedInUser.avatarUrl, crossorigin)
+                            img.header__avatar(src=loggedInUser.avatarUrl, crossorigin)
             else
                 li
                     a(href="/login") Login
