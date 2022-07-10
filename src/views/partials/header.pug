@@ -21,9 +21,11 @@ header
                         else
                             if loggedInUser.avatarUrl
                                 if loggedInUser.avatarUrl.includes("github")
-                                    img.header__avatar(src=loggedInUser.avatarUrl)
+                                    img.header__avatar(src=loggedInUser.avatarUrl, origin)
+                                else if loggedInUser.avatarUrl.includes("kakao")
+                                    img.header__avatar(src=loggedInUser.avatarUrl, origin)
                                 else
-                                    img.header__avatar(src= "/" + loggedInUser.avatarUrl)
+                                    img.header__avatar(src= "/" + loggedInUser.avatarUrl, origin)
                        
                         //- else if loggedInUser.avatarUrl.includes("github")
                         //-     img.header__avatar(src=loggedInUser.avatarUrl, crossorigin)
