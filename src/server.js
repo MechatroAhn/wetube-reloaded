@@ -20,11 +20,6 @@ app.use(logger);
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-app.use((req, res, next) => {
-  res.header("Cross-Origin-Embedder-Policy", "require-corp");
-  res.header("Cross-Origin-Opener-Policy", "same-origin");
-  next();
-});
 
 app.use(
   session({
@@ -38,6 +33,13 @@ app.use(
   })
 );
 
+
+app.use((req, res, next) => {
+  res.header("Cross-Origin-Embedder-Policy", "require-corp");
+  res.header("Cross-Origin-Opener-Policy", "same-origin");
+  res.header("Cross-Origin-Resource-Policy", "cross-origin");
+  next();
+});
 
 app.use(flash());
 app.use(localsMiddleware);
