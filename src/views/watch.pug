@@ -40,6 +40,7 @@ block content
         ul
             each comment in video.comments.reverse()
                 li.video__comment(data-id=comment.id)
+                    h3=comment.owner
                     i.fas.fa-comment
                     span  #{comment.text}
                     if String(loggedInUser._id) === String(comment.owner)
