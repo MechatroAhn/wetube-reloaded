@@ -8,19 +8,21 @@ const s3 = new aws.S3({
   credentials: {
     accessKeyId: process.env.AWS_ID,
     secretAccessKey: process.env.AWS_SECRET,
-    contentType: multerS3.AUTO_CONTENT_TYPE,
   },
 });
 
 const s3ImageUploader = multerS3({
   s3: s3,
-  bucket: "wetube-mechatro/images",
+  bucket: "wetube-mechatroahn/images",
+  acl: "public-read",
   contentType: multerS3.AUTO_CONTENT_TYPE,
 });
 
 const s3VideoUploader = multerS3({
     s3: s3,
-    bucket: "wetube-mechatro/videos",
+    bucket: "wetube-mechatroahn/videos",
+    acl: "public-read",
+    contentType: multerS3.AUTO_CONTENT_TYPE,
 });
 
 export const localsMiddleware = (req, res, next) => {
