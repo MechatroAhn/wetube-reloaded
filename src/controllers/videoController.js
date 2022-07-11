@@ -159,7 +159,7 @@ export const createComment = async (req, res) => {
     text,
     owner: user._id,
     video: id,
-  }).populate("owner");
+  });
 
   video.comments.push(comment._id);
 
