@@ -231,7 +231,7 @@ export const postEdit = async (req, res) => {
     file,
   } = req;
   // const { id } = req.session.user._id ; 동일
-
+  const isHeroku = process.env.NODE_ENV === "production";
   const emailExists = await User.exists({ email });
   const usernameExists = await User.exists({ username });
 
@@ -240,7 +240,7 @@ export const postEdit = async (req, res) => {
       const updatedUser = await User.findByIdAndUpdate(
         _id,
         {
-          avatarUrl: file ? file.location : avatarUrl,
+          avatarUrl: file ? (isHeroku? file.location : file.path) : avatarUrl,
           name,
           email,
           username,
@@ -257,7 +257,7 @@ export const postEdit = async (req, res) => {
       const updatedUser = await User.findByIdAndUpdate(
         _id,
         {
-          avatarUrl: file ? file.location : avatarUrl,
+          avatarUrl: file ? (isHeroku? file.location : file.path) : avatarUrl,
           name,
           email,
           username,
@@ -271,7 +271,7 @@ export const postEdit = async (req, res) => {
       const updatedUser = await User.findByIdAndUpdate(
         _id,
         {
-          avatarUrl: file ? file.location : avatarUrl,
+          avatarUrl: file ? (isHeroku? file.location : file.path): avatarUrl,
           name,
           email,
           username,
@@ -288,7 +288,7 @@ export const postEdit = async (req, res) => {
     const updatedUser = await User.findByIdAndUpdate(
       _id,
       {
-        avatarUrl: file ? file.location : avatarUrl,
+        avatarUrl: file ? (isHeroku? file.location : file.path): avatarUrl,
         name,
         email,
         username,
