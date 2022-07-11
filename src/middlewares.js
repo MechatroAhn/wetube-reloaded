@@ -11,7 +11,7 @@ const s3 = new aws.S3({
 
 const multerUploader = multerS3({
   s3: s3,
-  bucket: "wetube-mechatroAhn",
+  bucket: "wetube-mechatro",
   acl: "public-read",
 });
 
