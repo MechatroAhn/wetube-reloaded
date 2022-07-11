@@ -15,14 +15,12 @@ const s3 = new aws.S3({
 const s3ImageUploader = multerS3({
   s3: s3,
   bucket: "wetube-mechatro/images",
-  acl: "public-read",
   contentType: multerS3.AUTO_CONTENT_TYPE,
 });
 
 const s3VideoUploader = multerS3({
     s3: s3,
     bucket: "wetube-mechatro/videos",
-    acl: "public-read",
 });
 
 export const localsMiddleware = (req, res, next) => {
