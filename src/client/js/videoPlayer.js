@@ -131,3 +131,4 @@ timeline.addEventListener("input", handleTimelineChange);
 fullScreenBtn.addEventListener("click", handleFullscreen);
 video.addEventListener("click", handlePlayClick);
 document.addEventListener("keydown", handleKeydown);
+handleLoadedData();
