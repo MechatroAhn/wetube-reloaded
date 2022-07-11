@@ -66,8 +66,10 @@ const formatTime = (seconds) =>
   new Date(seconds * 1000).toISOString().substr(14, 5);
 
 const handleLoadedMetadata = () => {
-  totalTime.innerText = formatTime(Math.floor(video.duration));
-  timeline.max = Math.floor(video.duration);
+  if(!isNaN(video.duration)){
+    totalTime.innerText = formatTime(Math.floor(video.duration));
+    timeline.max = Math.floor(video.duration);
+  }
 };
 
 const handleTimeUpdate = () => {
@@ -131,4 +133,4 @@ timeline.addEventListener("input", handleTimelineChange);
 fullScreenBtn.addEventListener("click", handleFullscreen);
 video.addEventListener("click", handlePlayClick);
 document.addEventListener("keydown", handleKeydown);
-handleLoadedData();
+handleLoadedMetaData();
